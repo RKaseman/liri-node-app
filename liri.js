@@ -72,7 +72,7 @@ function song(inputs) {
         console.log("--------");
         console.log("No input was given. Here's a song by the band My Bloody Valentine...");
     } // end if !inputs
-    var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=1";
+    var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=5";
     spotify.request(queryURL, function(error, data) {
         if (error) {
             return console.log(error);
