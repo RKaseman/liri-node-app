@@ -12,7 +12,7 @@ var inputs = process.argv[3];
 
 // 
 
-// user input options for output
+// user input switch case options for output functions
 switch (action) {
     case "concert-this":
         concert(inputs);
@@ -33,9 +33,8 @@ switch (action) {
 
 // 
 
-// needs for loop
-// add date range search ?
-// concert-this + user input
+// needs for loop for multiple shows
+// case "concert-this" + user input
 function concert(inputs) {
     // if no user input, fetch My Bloody Valentine shows
     if (!inputs) {
@@ -54,6 +53,7 @@ function concert(inputs) {
             console.log("--------");
             console.log("Venue: " + collectInfo.venue.name);
             console.log("Location: " + collectInfo.venue.city + " " + collectInfo.venue.region + ", " + collectInfo.venue.country);
+            // moment formatted date and time
             console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
         }
     });
@@ -61,7 +61,7 @@ function concert(inputs) {
 
 // 
 
-// spotify-this-song + user input
+// case "spotify-this-song" + user input
 function song(inputs) {
     var spotify = new npmSpotify(keys.spotify);
     // if no user input, fetch a My Bloody Valentine song
@@ -88,7 +88,7 @@ function song(inputs) {
 // 
 
 // still have to enter movie in quotes
-// movie-this + user input
+// case "movie-this" + user input
 function movie(inputs) {
     // if no user input, fetch the 1981 version of "My Bloody Valentine"
     if (!inputs) {
@@ -139,7 +139,7 @@ function movie(inputs) {
 
 // 
 
-// do-what-it-says (no user input) fetches the Seam song "Little Chang, Big City" from random.txt
+// case "do-what-it-says" (no user input) fetches the Seam song "Little Chang, Big City" from random.txt
 function dwis() {
 	fs.readFile("random.txt", "utf8", function(error, data){
 		if (error) {
