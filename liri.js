@@ -1,21 +1,18 @@
 
+// variables and requires
 require("dotenv").config();
 var keys = require("./keys.js");
-
-// 
-
 var fs = require("fs");
 var request = require("request");
 var moment = require("moment");
 var npmSpotify = require("node-spotify-api");
-
-// 
-
+// user input
 var action = process.argv[2];
 var inputs = process.argv[3];
 
 // 
 
+// user input options for output
 switch (action) {
     case "concert-this":
         concert(inputs);
@@ -36,12 +33,11 @@ switch (action) {
 
 // 
 
-
-// 
-
 // needs for loop
 // add date range search ?
+// concert-this + user input
 function concert(inputs) {
+    // if no user input, fetch My Bloody Valentine shows
     if (!inputs) {
         inputs = "My Bloody Valentine";
         console.log("--------");
@@ -65,8 +61,10 @@ function concert(inputs) {
 
 // 
 
+// spotify-this-song + user input
 function song(inputs) {
     var spotify = new npmSpotify(keys.spotify);
+    // if no user input, fetch a My Bloody Valentine song
     if (!inputs) {
         inputs = "Come in Alone";
         console.log("--------");
@@ -90,45 +88,66 @@ function song(inputs) {
 // 
 
 // still have to enter movie in quotes
+// movie-this + user input
 function movie(inputs) {
-		if (!inputs) {
-        	inputs = "My Bloody Valentine";
-            console.log("--------");
-            console.log("No input was given. Here's the movie 'My Bloody Valentine'.");
-    	}
-    var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
-    request(queryURL, function(error, response, body) {
-        if (error) {
-            return console.log(error);
-        }
-		if (!error && response.statusCode === 200) {
-            collectInfo = JSON.parse(body);
-            console.log("--------");
-		    console.log("Title: " + collectInfo.Title);
-		    console.log("Year: " + collectInfo.Year);
-		    console.log("IMDB Rating: " + collectInfo.imdbRating);
-		    console.log("Rotten Tomatoes Rating: " + collectInfo.Ratings[1].Value);
-		    console.log("Country: " + collectInfo.Country);
-		    console.log("Language: " + collectInfo.Language);
-		    console.log("Plot: " + collectInfo.Plot);
-		    console.log("Actors: " + collectInfo.Actors);
-		}
-	});
+    // if no user input, fetch the 1981 version of "My Bloody Valentine"
+    if (!inputs) {
+        inputs = "My Bloody Valentine";
+        console.log("--------");
+        console.log("No input was given. Here's the (original) movie 'My Bloody Valentine'.");
+        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=1981&plot=short&apikey=trilogy";
+        request(queryURL, function (error, response, body) {
+            if (error) {
+                return console.log(error);
+            }
+            if (!error && response.statusCode === 200) {
+                collectInfo = JSON.parse(body);
+                console.log("--------");
+                console.log("Title: " + collectInfo.Title);
+                console.log("Year: " + collectInfo.Year);
+                console.log("IMDB Rating: " + collectInfo.imdbRating);
+                console.log("Rotten Tomatoes Rating: " + collectInfo.Ratings[1].Value);
+                console.log("Country: " + collectInfo.Country);
+                console.log("Language: " + collectInfo.Language);
+                console.log("Plot: " + collectInfo.Plot);
+                console.log("Actors: " + collectInfo.Actors);
+                return;
+            }
+        });
+    }
+    else {
+        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
+        request(queryURL, function(error, response, body) {
+            if (error) {
+                return console.log(error);
+            }
+            if (!error && response.statusCode === 200) {
+                collectInfo = JSON.parse(body);
+                console.log("--------");
+                console.log("Title: " + collectInfo.Title);
+                console.log("Year: " + collectInfo.Year);
+                console.log("IMDB Rating: " + collectInfo.imdbRating);
+                console.log("Rotten Tomatoes Rating: " + collectInfo.Ratings[1].Value);
+                console.log("Country: " + collectInfo.Country);
+                console.log("Language: " + collectInfo.Language);
+                console.log("Plot: " + collectInfo.Plot);
+                console.log("Actors: " + collectInfo.Actors);
+            }
+        });
+    };
 };
 
 // 
 
+// do-what-it-says (no user input) fetches the Seam song "Little Chang, Big City" from random.txt
 function dwis() {
 	fs.readFile("random.txt", "utf8", function(error, data){
 		if (error) {
     		return console.log(error);
   		}
-        // console.log("data: " + data);
 		var dataString = data.split(",");
-        // console.log("dataString: " + dataString);
 		if (dataString[0] === "spotify-this-song") {
             inputs = dataString[1];
-            // console.log("inputs: " + inputs);
             song(inputs);
 		}
   	});
