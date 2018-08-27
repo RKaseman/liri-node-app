@@ -33,7 +33,6 @@ switch (action) {
 
 // 
 
-// needs for loop for multiple shows
 // case "concert-this" + user input
 function concert(inputs) {
     // if no user input, fetch My Bloody Valentine shows
@@ -48,16 +47,27 @@ function concert(inputs) {
             return console.log(error);
         }
         if (!error && response.statusCode === 200) {
-            collectInfo = JSON.parse(body)[0];
-            concertDate = moment(collectInfo.datetime, "YYYY-MM-DD hh:mm:ss");
-            console.log("--------");
-            console.log("Venue: " + collectInfo.venue.name);
-            console.log("Location: " + collectInfo.venue.city + " " + collectInfo.venue.region + ", " + collectInfo.venue.country);
-            // moment formatted date and time
-            console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
-        }
-    });
-};
+            collectInfo = JSON.parse(body);
+            // loop through results and list all
+            for (var i = 0; i < collectInfo.length; i++) {
+                concertDate = moment(collectInfo[i].datetime, "YYYY-MM-DD hh:mm:ss");
+                console.log("--------");
+                console.log("Venue: " + collectInfo[i].venue.name);
+                console.log("Location: " + collectInfo[i].venue.city + " " + collectInfo[i].venue.region + ", " + collectInfo[i].venue.country);
+                // moment formatted date and time
+                console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
+            } // end for i
+        } // end if !error
+    }); // end request
+}; // end concert search function
+
+// 
+
+var numbers = [1, 2, 3, 4, 5];
+for (var i = 0; i < numbers.length; i++) {
+    numbers[i] *= 2;
+}
+// numbers is now [2, 4, 6, 8, 10]
 
 // 
 
