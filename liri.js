@@ -1,14 +1,13 @@
 
 require("dotenv").config();
-var keysFile = require("./keys.js");
-// var keysSpotify = new Spotify(keys.spotify);
+var keys = require("./keys.js");
 
 // 
 
 var fs = require("fs");
 var request = require("request");
 var moment = require("moment");
-var spotify = require("node-spotify-api");
+var npmSpotify = require("node-spotify-api");
 
 // 
 
@@ -19,16 +18,20 @@ var inputs = process.argv[3];
 
 switch (action) {
     case "concert-this":
-    concert(inputs);
-    break;
+        concert(inputs);
+        break;
+
+    case "spotify-this-song":
+        song(inputs);
+        break;
 
 	case "movie-this":
-	movie(inputs);
-	break;
+        movie(inputs);
+        break;
 
 	case "do-what-it-says":
-	dwis();
-	break;
+        dwis();
+        break;
 };
 
 // 
@@ -66,17 +69,50 @@ function concert(inputs) {
 
 // 
 
+function song(inputs) {
+    var spotify = new npmSpotify(keys.spotify);
+    var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=1";
+    spotify.request(queryURL, function(error, data) {
+        console.log("queryURL : " + queryURL);
+        console.log("--------");
+        if(error) {
+            return console.log(error);
+        }
+        if (!inputs) {
+            inputs = "Honeychain";
+            console.log("inputs : " + inputs);
+            console.log("--------");
+        }
+        if (!error) {
+            // console.log(data);
+            // console.log("---- ^ data ^ ----");
+            // console.log(data.tracks);
+            // console.log("---- ^ data.tracks ^ ----");
+            console.log(data.tracks.items[0]);
+            console.log("---- ^ data.tracks.items[0] ^ ----");
+            console.log(data.tracks.items[0].artists[0].name);
+            console.log("---- ^ data.tracks.items[0].artists[0].name ^ ----");
+            console.log(data.tracks.items[0].name);
+            console.log("---- ^ data.tracks.items[0].name ^ ----");
+            console.log(data.tracks.items[0].album.name);
+            console.log("---- ^ data.tracks.items[0].album.name ^ ----");
+        }
+    });
+};
+
+// 
+
 // still have to enter movie in quotes
 function movie(inputs) {
-    var queryUrl = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
-	request(queryUrl, function(error, response, body) {
+    var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
+    request(queryURL, function(error, response, body) {
         if (error) {
             return console.log(error);
         }
 		if (!inputs) {
         	inputs = "Manos+The+Hands+of+Fate";
             console.log("inputs : " + inputs);
-            console.log("{FIX} queryUrl : " + queryUrl);
+            console.log("{FIX} queryURL : " + queryURL);
     	}
 		if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body);
