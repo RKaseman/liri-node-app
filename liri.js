@@ -152,7 +152,7 @@ function dwis() {
 		if (dataString[0] === "spotify-this-song") {
             inputs = dataString[1];
             song(inputs);
-		} // end if dataString array has a value, search it
+		} // end if var dataString array has a command & value-to-search
   	}); // end fs.readFile of random.txt
 }; // end do-what-it-says function
 
