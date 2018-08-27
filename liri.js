@@ -40,7 +40,7 @@ function concert(inputs) {
     if (!inputs) {
         inputs = "My Bloody Valentine";
         console.log("--------");
-        console.log("No input was given. Here's the band My Bloody Valentine:");
+        console.log("No input was given. Here's the band My Bloody Valentine...");
     }
     var queryURL = "https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
     request(queryURL, function(error, response, body) {
@@ -68,7 +68,7 @@ function song(inputs) {
     if (!inputs) {
         inputs = "Come in Alone";
         console.log("--------");
-        console.log("No input was given. Here's a song by the band My Bloody Valentine.");
+        console.log("No input was given. Here's a song by the band My Bloody Valentine...");
     }
     var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=1";
     spotify.request(queryURL, function(error, data) {
@@ -94,7 +94,7 @@ function movie(inputs) {
     if (!inputs) {
         inputs = "My Bloody Valentine";
         console.log("--------");
-        console.log("No input was given. Here's the (original) movie 'My Bloody Valentine'.");
+        console.log("No input was given. Here's the (original) movie 'My Bloody Valentine'...");
         var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=1981&plot=short&apikey=trilogy";
         request(queryURL, function (error, response, body) {
             if (error) {
