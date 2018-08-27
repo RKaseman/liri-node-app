@@ -12,7 +12,7 @@ var inputs = process.argv[3];
 
 // 
 
-// user input switch case options for output functions
+// user input switch cases
 switch (action) {
     case "concert-this":
         concert(inputs);
@@ -33,19 +33,19 @@ switch (action) {
 
 // 
 
-// case "concert-this" + user input
+// case "concert-this" + user input (artist)
 function concert(inputs) {
     // if no user input, fetch My Bloody Valentine shows
     if (!inputs) {
         inputs = "My Bloody Valentine";
         console.log("--------");
         console.log("No input was given. Here's the band My Bloody Valentine...");
-    }
+    } // end if !inputs
     var queryURL = "https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
     request(queryURL, function(error, response, body) {
         if (error) {
             return console.log(error);
-        }
+        } // end if error
         if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body);
             // loop through results and list all
@@ -63,15 +63,7 @@ function concert(inputs) {
 
 // 
 
-var numbers = [1, 2, 3, 4, 5];
-for (var i = 0; i < numbers.length; i++) {
-    numbers[i] *= 2;
-}
-// numbers is now [2, 4, 6, 8, 10]
-
-// 
-
-// case "spotify-this-song" + user input
+// case "spotify-this-song" + user input (song title)
 function song(inputs) {
     var spotify = new npmSpotify(keys.spotify);
     // if no user input, fetch a My Bloody Valentine song
@@ -79,26 +71,26 @@ function song(inputs) {
         inputs = "Come in Alone";
         console.log("--------");
         console.log("No input was given. Here's a song by the band My Bloody Valentine...");
-    }
+    } // end if !inputs
     var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=1";
     spotify.request(queryURL, function(error, data) {
-        if(error) {
+        if (error) {
             return console.log(error);
-        }
+        } // end if error
         if (!error) {
             console.log("--------");
             console.log("Artist(s): " + data.tracks.items[0].artists[0].name);
             console.log("Track Title: " + data.tracks.items[0].name);
             console.log("Album: " + data.tracks.items[0].album.name);
             console.log("Preview: " + data.tracks.items[0].preview_url);
-        }
-    });
-};
+        } // end if !error
+    }); // end spotify.request
+}; // end song title search function
 
 // 
 
 // still have to enter movie in quotes
-// case "movie-this" + user input
+// case "movie-this" + user input (movie title)
 function movie(inputs) {
     // if no user input, fetch the 1981 version of "My Bloody Valentine"
     if (!inputs) {
@@ -109,7 +101,7 @@ function movie(inputs) {
         request(queryURL, function (error, response, body) {
             if (error) {
                 return console.log(error);
-            }
+            } // end if error
             if (!error && response.statusCode === 200) {
                 collectInfo = JSON.parse(body);
                 console.log("--------");
@@ -122,15 +114,16 @@ function movie(inputs) {
                 console.log("Plot: " + collectInfo.Plot);
                 console.log("Actors: " + collectInfo.Actors);
                 return;
-            }
-        });
-    }
+            } // end if !error
+        }); // end special query (has date inserted to get correct release)
+    } // end if !inputs
     else {
+        // user input (movie title)
         var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
         request(queryURL, function(error, response, body) {
             if (error) {
                 return console.log(error);
-            }
+            } // end if error
             if (!error && response.statusCode === 200) {
                 collectInfo = JSON.parse(body);
                 console.log("--------");
@@ -142,10 +135,10 @@ function movie(inputs) {
                 console.log("Language: " + collectInfo.Language);
                 console.log("Plot: " + collectInfo.Plot);
                 console.log("Actors: " + collectInfo.Actors);
-            }
-        });
-    };
-};
+            } // end if !error
+        }); // end request
+    }; // end else
+}; // end movie title search function
 
 // 
 
@@ -154,12 +147,12 @@ function dwis() {
 	fs.readFile("random.txt", "utf8", function(error, data){
 		if (error) {
     		return console.log(error);
-  		}
+  		} // end if error
 		var dataString = data.split(",");
 		if (dataString[0] === "spotify-this-song") {
             inputs = dataString[1];
             song(inputs);
-		}
-  	});
-};
+		} // end if dataString array has a value, search it
+  	}); // end fs.readFile of random.txt
+}; // end do-what-it-says function
 
