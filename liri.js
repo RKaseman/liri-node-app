@@ -36,32 +36,28 @@ switch (action) {
 
 // 
 
-console.log("--------");
 
 // 
 
 // needs for loop
-// needs date range search
+// add date range search ?
 function concert(inputs) {
+    if (!inputs) {
+        inputs = "My Bloody Valentine";
+        console.log("--------");
+        console.log("No input was given. Here's the band My Bloody Valentine:");
+    }
     var queryURL = "https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
     request(queryURL, function(error, response, body) {
         if (error) {
             return console.log(error);
         }
-        if (!inputs) {
-            inputs = "Bloc Party";
-            console.log("inputs : " + inputs);
-            console.log("{FIX} queryURL : " + queryURL);
-            console.log("No input given. Bloc Party was searched.");
-        }
         if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body)[0];
-            console.log(JSON.parse(body));
-            // moment formatted date
             concertDate = moment(collectInfo.datetime, "YYYY-MM-DD hh:mm:ss");
             console.log("--------");
             console.log("Venue: " + collectInfo.venue.name);
-            console.log("Location: " + collectInfo.venue.city + collectInfo.venue.region + ", " + collectInfo.venue.country);
+            console.log("Location: " + collectInfo.venue.city + " " + collectInfo.venue.region + ", " + collectInfo.venue.country);
             console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
         }
     });
@@ -71,31 +67,22 @@ function concert(inputs) {
 
 function song(inputs) {
     var spotify = new npmSpotify(keys.spotify);
+    if (!inputs) {
+        inputs = "Come in Alone";
+        console.log("--------");
+        console.log("No input was given. Here's a song by the band My Bloody Valentine.");
+    }
     var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=1";
     spotify.request(queryURL, function(error, data) {
-        console.log("queryURL : " + queryURL);
-        console.log("--------");
         if(error) {
             return console.log(error);
         }
-        if (!inputs) {
-            inputs = "Honeychain";
-            console.log("inputs : " + inputs);
-            console.log("--------");
-        }
         if (!error) {
-            // console.log(data);
-            // console.log("---- ^ data ^ ----");
-            // console.log(data.tracks);
-            // console.log("---- ^ data.tracks ^ ----");
-            console.log(data.tracks.items[0]);
-            console.log("---- ^ data.tracks.items[0] ^ ----");
-            console.log(data.tracks.items[0].artists[0].name);
-            console.log("---- ^ data.tracks.items[0].artists[0].name ^ ----");
-            console.log(data.tracks.items[0].name);
-            console.log("---- ^ data.tracks.items[0].name ^ ----");
-            console.log(data.tracks.items[0].album.name);
-            console.log("---- ^ data.tracks.items[0].album.name ^ ----");
+            console.log("--------");
+            console.log("Artist(s): " + data.tracks.items[0].artists[0].name);
+            console.log("Track Title: " + data.tracks.items[0].name);
+            console.log("Album: " + data.tracks.items[0].album.name);
+            console.log("Preview: " + data.tracks.items[0].preview_url);
         }
     });
 };
@@ -104,18 +91,19 @@ function song(inputs) {
 
 // still have to enter movie in quotes
 function movie(inputs) {
+		if (!inputs) {
+        	inputs = "My Bloody Valentine";
+            console.log("--------");
+            console.log("No input was given. Here's the movie 'My Bloody Valentine'.");
+    	}
     var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
     request(queryURL, function(error, response, body) {
         if (error) {
             return console.log(error);
         }
-		if (!inputs) {
-        	inputs = "Manos+The+Hands+of+Fate";
-            console.log("inputs : " + inputs);
-            console.log("{FIX} queryURL : " + queryURL);
-    	}
 		if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body);
+            console.log("--------");
 		    console.log("Title: " + collectInfo.Title);
 		    console.log("Year: " + collectInfo.Year);
 		    console.log("IMDB Rating: " + collectInfo.imdbRating);
@@ -135,10 +123,13 @@ function dwis() {
 		if (error) {
     		return console.log(error);
   		}
-		var dataArray = data.split(",");
-		if (dataArray[0] === "spotify-this-song") {
-			var randomSong = dataArray[1].slice(1, -1);
-			spotify(randomSong);
+        // console.log("data: " + data);
+		var dataString = data.split(",");
+        // console.log("dataString: " + dataString);
+		if (dataString[0] === "spotify-this-song") {
+            inputs = dataString[1];
+            // console.log("inputs: " + inputs);
+            song(inputs);
 		}
   	});
 };

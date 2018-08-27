@@ -1,5 +1,5 @@
 
-console.log('./keys.js is loaded');
+// console.log('./keys.js is loaded');
 
 // get private spotify key info from .env
 exports.spotify = {
