@@ -9,7 +9,7 @@ var npmSpotify = require("node-spotify-api");
 
 // user input
 var action = process.argv[2];
-var inputs = process.argv[3];
+var inputs = process.argv.slice(3).join("+");
 
 
 // function & user input switch cases
@@ -43,8 +43,8 @@ function concert(inputs) {
         console.log("No input was given. Here's the band My Bloody Valentine...");
     } // end !inputs
 
-    // add artist searched query to log file
-    fs.appendFile("log.txt", "concert-this\n" + ">> " + inputs + ":\n\n", function (error) {
+    // add concert-this to log file
+    fs.appendFile("log.txt", "concert-this\n" + "your search query string >> " + inputs + ":\n\n", function (error) {
         // error warn
         if (error) {
             console.log(error);
@@ -55,7 +55,6 @@ function concert(inputs) {
     }); // end log
 
     var queryURL = "https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
-
     request(queryURL, function(error, response, body) {
         // response error warn
         if (error) {
@@ -63,7 +62,6 @@ function concert(inputs) {
         }
         if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body);
-
             // loop through results and list all
             for (var i = 0; i < collectInfo.length; i++) {
                 concertDate = moment(collectInfo[i].datetime, "YYYY-MM-DD hh:mm:ss");
@@ -72,7 +70,6 @@ function concert(inputs) {
                 console.log("Location: " + collectInfo[i].venue.city + " " + collectInfo[i].venue.region + ", " + collectInfo[i].venue.country);
                 // moment formatted date and time
                 console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
-
                 // add artist search results to log file
                 fs.appendFile("log.txt", "Venue: " + collectInfo[i].venue.name + "\n" 
                 + "Location: " 
@@ -81,12 +78,11 @@ function concert(inputs) {
                 + moment(concertDate).format("MM/DD/YYYY, h:mma") + "\n\n", function (error) {
                     if (error) {
                         console.log(error);
-                    } else {
-                        console.log("--------");
-                        console.log("Logged results");
                     }
                 }) // end log
             } // end for i
+            console.log("--------");
+            console.log("Logged results");
         } // end if !error
     }) // end request
 }; // end "concert-this"
@@ -106,8 +102,18 @@ function song(inputs) {
         console.log("No input was given. Here's a song by the band My Bloody Valentine...");
     } // end !inputs
 
-    var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=5";
+    // add spotify-this-song to log file
+    fs.appendFile("log.txt", "spotify-this-song\n" + "your search query string >> " + inputs + ":\n\n", function (error) {
+        // error warn
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("--------");
+            console.log("Logged results");
+        }
+    }); // end log
 
+    var queryURL = "https://api.spotify.com/v1/search?q=" + inputs + "&type=track&market=US&offset=0&limit=5";
     spotify.request(queryURL, function(error, data) {
         // error warn
         if (error) {
@@ -119,6 +125,17 @@ function song(inputs) {
             console.log("Track Title: " + data.tracks.items[0].name);
             console.log("Album: " + data.tracks.items[0].album.name);
             console.log("Preview: " + data.tracks.items[0].preview_url);
+            // add artist search results to log file
+            fs.appendFile("log.txt", "Artist(s): " + data.tracks.items[0].artists[0].name + "\n"
+                + "Track Title: " + data.tracks.items[0].name + "\n"
+                + "Album: " + data.tracks.items[0].album.name + "\n" 
+                + "Preview: " + data.tracks.items[0].preview_url + "\n", function (error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                }) // end log
+            console.log("--------");
+            console.log("Logged results");
         } // end if !error
     }) // end request
 }; // end "spotify-this-song"
