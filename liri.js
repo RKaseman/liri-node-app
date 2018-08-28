@@ -6,11 +6,11 @@ var fs = require("fs");
 var request = require("request");
 var moment = require("moment");
 var npmSpotify = require("node-spotify-api");
+
 // user input
 var action = process.argv[2];
 var inputs = process.argv[3];
 
-// 
 
 // user input switch cases
 switch (action) {
@@ -31,7 +31,6 @@ switch (action) {
         break;
 };
 
-// 
 
 // case "concert-this" + user input (artist)
 function concert(inputs) {
@@ -41,14 +40,25 @@ function concert(inputs) {
         console.log("--------");
         console.log("No input was given. Here's the band My Bloody Valentine...");
     } // end if !inputs
+    fs.appendFile("log.txt", ">> " + inputs + ":\n\n", function (error) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            console.log("--------");
+            console.log("Logged results");
+        }
+    }); // end fs.appendFile (results)
+
     var queryURL = "https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
+
     request(queryURL, function(error, response, body) {
         if (error) {
             return console.log(error);
         } // end if error
         if (!error && response.statusCode === 200) {
             collectInfo = JSON.parse(body);
-            // loop through results and list all
+            // loop through body results and list all
             for (var i = 0; i < collectInfo.length; i++) {
                 concertDate = moment(collectInfo[i].datetime, "YYYY-MM-DD hh:mm:ss");
                 console.log("--------");
@@ -56,9 +66,28 @@ function concert(inputs) {
                 console.log("Location: " + collectInfo[i].venue.city + " " + collectInfo[i].venue.region + ", " + collectInfo[i].venue.country);
                 // moment formatted date and time
                 console.log("Date & Time: " + moment(concertDate).format("MM/DD/YYYY, h:mma"));
+                fs.appendFile("log.txt", "Venue: " + collectInfo[i].venue.name 
+                    + "\n"
+                    + "Location: " 
+                    + collectInfo[i].venue.city 
+                    + collectInfo[i].venue.region 
+                    + ", " 
+                    + collectInfo[i].venue.country 
+                    + "\n"
+                    + "Date & Time: " 
+                    + moment(concertDate).format("MM/DD/YYYY, h:mma")
+                    + "\n\n", function (error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                    else {
+                        console.log("--------");
+                        console.log("Logged results");
+                    }
+                }) // end if error on fs.appendFile
             } // end for i
         } // end if !error
-    }); // end request
+    }) // end request
 }; // end concert search function
 
 // 
