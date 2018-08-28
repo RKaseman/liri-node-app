@@ -50,7 +50,7 @@ function concert(inputs) {
             console.log(error);
         } else {
             console.log("--------");
-            console.log("Logged results");
+            console.log("Logged search query");
         }
     }); // end log
 
@@ -109,7 +109,7 @@ function song(inputs) {
             console.log(error);
         } else {
             console.log("--------");
-            console.log("Logged results");
+            console.log("Logged search query");
         }
     }); // end log
 
@@ -129,7 +129,7 @@ function song(inputs) {
             fs.appendFile("log.txt", "Artist(s): " + data.tracks.items[0].artists[0].name + "\n"
                 + "Track Title: " + data.tracks.items[0].name + "\n"
                 + "Album: " + data.tracks.items[0].album.name + "\n" 
-                + "Preview: " + data.tracks.items[0].preview_url + "\n", function (error) {
+                + "Preview: " + data.tracks.items[0].preview_url + "\n\n", function (error) {
                     if (error) {
                         console.log(error);
                     }
@@ -141,7 +141,7 @@ function song(inputs) {
 }; // end "spotify-this-song"
 
 
-// case "movie-this" + user input (movie title)
+// case "movie-this" movie title search
 
 function movie(inputs) {
 
@@ -151,8 +151,18 @@ function movie(inputs) {
         console.log("--------");
         console.log("No input was given. Here's the (original) movie 'My Bloody Valentine'...");
 
-        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=1981&plot=short&apikey=trilogy";
+        // add movie-this to log file
+        fs.appendFile("log.txt", "movie-this\n" + "your search query string >> " + inputs + ":\n\n", function (error) {
+            // error warn
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("--------");
+                console.log("Logged search query");
+            }
+        }); // end log
 
+        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=1981&plot=short&apikey=trilogy";
         request(queryURL, function (error, response, body) {
             // error warn
             if (error) {
@@ -169,14 +179,39 @@ function movie(inputs) {
                 console.log("Language: " + collectInfo.Language);
                 console.log("Plot: " + collectInfo.Plot);
                 console.log("Actors: " + collectInfo.Actors);
-                return;
+                // add artist search results to log file
+                fs.appendFile("log.txt", "Title: " + collectInfo.Title + "\n"
+                    + "Year: " + collectInfo.Year + "\n"
+                    + "IMDB Rating: " + collectInfo.imdbRating + "\n"
+                    + "Rotten Tomatoes Rating: " + collectInfo.Ratings[1].Value + "\n"
+                    + "Country: " + collectInfo.Country + "\n"
+                    + "Language: " + collectInfo.Language + "\n"
+                    + "Plot: " + collectInfo.Plot + "\n"
+                    + "Actors: " + collectInfo.Actors + "\n\n", function (error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                }) // end log
+            console.log("--------");
+            console.log("Logged results");
+            return;
             } // end if !error
         }) // end special query (has date inserted to get correct release)
     } // end !inputs
     else {
 
-        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
+        // add movie-this to log file
+        fs.appendFile("log.txt", "movie-this\n" + "your search query string >> " + inputs + ":\n\n", function (error) {
+            // error warn
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("--------");
+                console.log("Logged search query");
+            }
+        }); // end log
 
+        var queryURL = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=trilogy";
         request(queryURL, function(error, response, body) {
             // error warn
             if (error) {
@@ -193,6 +228,21 @@ function movie(inputs) {
                 console.log("Language: " + collectInfo.Language);
                 console.log("Plot: " + collectInfo.Plot);
                 console.log("Actors: " + collectInfo.Actors);
+                // add artist search results to log file
+                fs.appendFile("log.txt", "Title: " + collectInfo.Title + "\n"
+                    + "Year: " + collectInfo.Year + "\n"
+                    + "IMDB Rating: " + collectInfo.imdbRating + "\n"
+                    + "Rotten Tomatoes Rating: " + collectInfo.Ratings[1].Value + "\n"
+                    + "Country: " + collectInfo.Country + "\n"
+                    + "Language: " + collectInfo.Language + "\n"
+                    + "Plot: " + collectInfo.Plot + "\n"
+                    + "Actors: " + collectInfo.Actors + "\n\n", function (error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                }) // end log
+            console.log("--------");
+            console.log("Logged results");
             } // end if !error
         }); // end request
     }; // end else
